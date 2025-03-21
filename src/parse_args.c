@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 17:44:47 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/21 19:10:07 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/21 19:39:24 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@
 int size_check(t_map *map)
 {
 	int i;
-	
+	unsigned int size_x = map->size_x;
 	i = 0;
 	map->size_x = ft_strlen(map->area[0]);
 	while(map->area[i])
 	{
-		if (ft_strlen(map->area[i]) != map->size_x)
+		if (ft_strlen(map->area[i]) != size_x)
 			return (error_msg("map is not req"), -1);
 		i++;
 	}
@@ -107,10 +107,10 @@ t_map *parsing_args(char *filename)
 	read_map(map, filename, map->size_y + 1);
 	if (size_check(map) < 0)
 		return (free(map), NULL); // need to free map area, LEAK IS HERE
-	symbols_check(); // TO DO 0 1 C P E
-	players_check(); // TO DO should be 1;
-	exit_check(); // TO DO should be 1;
-	col_check(); // should be more than 0
+	// symbols_check(); // TO DO 0 1 C P E
+	// players_check(); // TO DO should be 1;
+	// exit_check(); // TO DO should be 1;
+	// col_check(); // should be more than 0
 	// map->area[0] should be only 1
 	// map->area[map->size_y] should be only 1
 	// map-area[i][0] == 1, map-area[i][map->size_x - 1] == 1
