@@ -6,7 +6,7 @@
 #    By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/10 14:19:08 by mzhivoto          #+#    #+#              #
-#    Updated: 2025/03/21 19:36:56 by mzhivoto         ###   ########.fr        #
+#    Updated: 2025/03/22 18:47:16 by mzhivoto         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ LIBFT = $(LIBFT_PATH)/libft.a
 SRC = $(SRCS_PATH)/main.c \
 	$(SRCS_PATH)/parse_args.c \
 	$(SRCS_PATH)/error_msg.c \
+	$(SRCS_PATH)/map_check.c \
 
 	
 

@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 13:20:43 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/21 18:22:27 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/22 18:48:04 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 
 # include <stdio.h>
+# include <fcntl.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include "libft.h"
@@ -37,5 +38,11 @@ typedef struct s_map
 
 t_map *parsing_args(char *filename);
 void error_msg(char *msg);
+
+int	symbols_check(t_map *map);
+int	player_check(t_map *map);
+int	exit_check(t_map *map);
+int	collectables_check(t_map *map);
+int	borders_check(t_map *map);
 
 #endif
