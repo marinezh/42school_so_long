@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 17:44:47 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/23 14:25:57 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/23 15:06:17 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	map_lines(char *filename)
 	count = 0;
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
-		return (error_msg("file openning error 1"), 0);
+		return (error_msg("file openning error 1"), -1);
 	while (1)
 	{
 		line = get_next_line(fd);
@@ -75,6 +75,7 @@ int	read_map(t_map *map, char *filename, int max_lines)
 		i++;
 	}
 	map->area[i] = NULL;
+	
 	return (1);
 }
 
@@ -97,32 +98,33 @@ int	name_validation(char *filename)
 t_map	*parsing_args(char *filename)
 {
 	t_map	*map;
-	int		j;
 
 	if (name_validation(filename) < 0)
 		return (error_msg("wrong file name"), NULL);
 	map = ft_calloc(1, sizeof(t_map));
 	if (!map)
-		return (NULL);
+		return (free_map(map), error_msg("memory error"), NULL);
 	map->size_y = map_lines(filename);
 	if (map->size_y < 1)
 		return (free_map(map), error_msg("error file reading"), NULL);
-	printf("lines %d\n", map->size_y);
+	//printf("lines %d\n", map->size_y);
 	map->area = ft_calloc(map->size_y + 1, sizeof(char *));
 	if (!map->area)
-		return (free(map), NULL);
-	read_map(map, filename, map->size_y + 1);
-	if (size_check(map) < 0)
-		return (free(map), NULL); // need to free map area, LEAK IS HERE
-	symbols_check(map);
-	player_check(map);
-	printf("map player position x %d and y %d\n", map->player_pos.x, map->player_pos.y);
-	exit_check(map);
-	collectables_check(map); 
-	if(path_check(map) < 0)
-		return (error_msg("path check failed"), NULL); // need to free map area, LEAK IS HERE
+		return (free_map(map), error_msg("memory error"), NULL);
+
+	if (read_map(map, filename, map->size_y + 1) < 0)
+		return (free_map(map),error_msg("read map failed"), NULL);
+	if (size_check(map) < 0 || symbols_check(map) < 0 
+		|| player_check(map) < 0 || exit_check(map) < 0 
+		|| collectables_check(map) < 0 )
+		return (free_map(map), NULL); // need to free map area, LEAK IS HERE
 	
-	j = 0;
+	//printf("map player position x %d and y %d\n", map->player_pos.x, map->player_pos.y);
+	
+	// if(path_check(map) < 0)
+	// 	return (free_map(map), error_msg("path check failed"), NULL); // need to free map area, LEAK IS HERE
+	// Print for debugging DELETE!!!
+	int j = 0;
 	while (map->area[j])
 		printf("map is %s\n", map->area[j++]);
 	return (map);

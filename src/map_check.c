@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 18:44:35 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/22 18:46:32 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/23 14:43:26 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	symbols_check(t_map *map)
 		{
 			c = map->area[x][y];
 			if (c != '0' && c != '1' && c != 'C' && c != 'E' && c != 'P')
-				return (error_msg("wrong symbol found"), 0);
+				return (error_msg("wrong symbol found"), -1);
 			y++;
 		}
 		x++;
@@ -57,7 +57,7 @@ int	player_check(t_map *map)
 		row++;
 	}
 	if (player_count != 1)
-		return (error_msg("There must be exactly one player (P)"), 0);
+		return (error_msg("There must be exactly one player (P)"), -1);
 	return (1);
 }
 int	exit_check(t_map *map)
@@ -83,7 +83,7 @@ int	exit_check(t_map *map)
 		row++;
 	}
 	if (exit_count != 1)
-		return (error_msg("There must be exactly one exit (E)"), 0);
+		return (error_msg("There must be exactly one exit (E)"), -1);
 	return (1);
 }
 int	collectables_check(t_map *map)
@@ -106,7 +106,7 @@ int	collectables_check(t_map *map)
 		row++;
 	}
 	if (collectables_count < 1)
-		return (error_msg("There must be at least 1 colectable (C)"), 0);
+		return (error_msg("There must be at least 1 colectable (C)"), -1);
 	map->collectables = collectables_count;
 	// printf("collectable-2 %d\n", map->collectables);
 	return (1);
@@ -121,21 +121,21 @@ int	borders_check(t_map *map)
 	while (map->area[0][col])
 	{
 		if (map->area[0][col] != '1')
-			return (error_msg("Top border is not closed"), 0);
+			return (error_msg("Top border is not closed"), -1);
 		col++;
 	}
 	col = 0;
 	while (map->area[map->size_y - 1][col])
 	{
 		if (map->area[map->size_y - 1][col] != '1')
-			return (error_msg("Bottom border is not closed"), 0);
+			return (error_msg("Bottom border is not closed"), 1);
 		col++;
 	}
 	row = 0;
 	while (map->area[row])
 	{
 		if (map->area[row][0] != '1' || map->area[row][map->size_x - 1] != '1')
-			return (error_msg("Side borders are not closed"), 0);
+			return (error_msg("Side borders are not closed"), -1);
 		row++;
 	}
 	return (1);

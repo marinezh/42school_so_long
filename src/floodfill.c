@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:22:08 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/23 13:34:40 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/23 14:50:00 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	path_check(t_map *map)
 	copy_map->area = ft_calloc(copy_map->size_y, sizeof(char *));
 	if (!copy_map->area)
 		return (-1);
-	while (map->area[i])
+	while (i < copy_map->size_y)
 	{
 		copy_map->area[i] = ft_strdup(map->area[i]);
 		i++;
@@ -79,5 +79,6 @@ int	path_check(t_map *map)
 	printf("copy collet FINAL x is %d\n", copy_map->collectables);
 	if (copy_map->collectables > 0 || copy_map->exit_pos.x > 0)
 		return (error_msg("no valid path found"), -1);
+	free_map(copy_map);
 	return (1);
 }
