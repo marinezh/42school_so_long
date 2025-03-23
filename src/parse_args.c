@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 17:44:47 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/23 15:06:17 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/23 15:08:48 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,6 @@ t_map	*parsing_args(char *filename)
 	map->size_y = map_lines(filename);
 	if (map->size_y < 1)
 		return (free_map(map), error_msg("error file reading"), NULL);
-	//printf("lines %d\n", map->size_y);
 	map->area = ft_calloc(map->size_y + 1, sizeof(char *));
 	if (!map->area)
 		return (free_map(map), error_msg("memory error"), NULL);
@@ -118,11 +117,8 @@ t_map	*parsing_args(char *filename)
 		|| player_check(map) < 0 || exit_check(map) < 0 
 		|| collectables_check(map) < 0 )
 		return (free_map(map), NULL); // need to free map area, LEAK IS HERE
-	
-	//printf("map player position x %d and y %d\n", map->player_pos.x, map->player_pos.y);
-	
-	// if(path_check(map) < 0)
-	// 	return (free_map(map), error_msg("path check failed"), NULL); // need to free map area, LEAK IS HERE
+	if(path_check(map) < 0)
+		return (free_map(map), error_msg("path check failed"), NULL); // need to free map area, LEAK IS HERE
 	// Print for debugging DELETE!!!
 	int j = 0;
 	while (map->area[j])

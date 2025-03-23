@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:22:08 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/23 14:50:00 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/23 15:15:57 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	path_check(t_map *map)
 	i = 0;
 	copy_map = ft_calloc(1, sizeof(t_map *));
 	if (!copy_map)
-		return (-1);
+		return (free_map(map), error_msg("memory error"), -1);
 	copy_map->collectables = map->collectables;
 	copy_map->size_x = map->size_x;
 	copy_map->size_y = map->size_y;
@@ -69,7 +69,7 @@ int	path_check(t_map *map)
 	printf("copy map player position x %d and y %d\n", copy_map->player_pos.x, copy_map->player_pos.y);
 	copy_map->area = ft_calloc(copy_map->size_y, sizeof(char *));
 	if (!copy_map->area)
-		return (-1);
+		return (free_map(map), error_msg("memory error"), -1);
 	while (i < copy_map->size_y)
 	{
 		copy_map->area[i] = ft_strdup(map->area[i]);
@@ -78,7 +78,7 @@ int	path_check(t_map *map)
 	flood_fill(copy_map, copy_map->player_pos.y, copy_map->player_pos.x);
 	printf("copy collet FINAL x is %d\n", copy_map->collectables);
 	if (copy_map->collectables > 0 || copy_map->exit_pos.x > 0)
-		return (error_msg("no valid path found"), -1);
+		return (free_map(copy_map), error_msg("no valid path found"), -1);
 	free_map(copy_map);
 	return (1);
 }
