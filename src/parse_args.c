@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 17:44:47 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/22 18:49:27 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/23 14:25:57 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,14 +80,14 @@ int	read_map(t_map *map, char *filename, int max_lines)
 
 int	name_validation(char *filename)
 {
-	char	*resolution;
+	char	*extension;
 	int		len;
 
 	len = ft_strlen(filename);
 	if (len < 5)
 		return (-1);
-	resolution = ft_strchr(filename, '.');
-	if (ft_strncmp(resolution, ".ber", len) != 0)
+	extension = ft_strchr(filename, '.');
+	if (!extension || ft_strncmp(extension, ".ber", len) != 0)
 		return (-1);
 	return (1);
 }
@@ -106,7 +106,7 @@ t_map	*parsing_args(char *filename)
 		return (NULL);
 	map->size_y = map_lines(filename);
 	if (map->size_y < 1)
-		return (error_msg("error file reading"), NULL);
+		return (free_map(map), error_msg("error file reading"), NULL);
 	printf("lines %d\n", map->size_y);
 	map->area = ft_calloc(map->size_y + 1, sizeof(char *));
 	if (!map->area)
@@ -116,8 +116,11 @@ t_map	*parsing_args(char *filename)
 		return (free(map), NULL); // need to free map area, LEAK IS HERE
 	symbols_check(map);
 	player_check(map);
+	printf("map player position x %d and y %d\n", map->player_pos.x, map->player_pos.y);
 	exit_check(map);
 	collectables_check(map); 
+	if(path_check(map) < 0)
+		return (error_msg("path check failed"), NULL); // need to free map area, LEAK IS HERE
 	
 	j = 0;
 	while (map->area[j])

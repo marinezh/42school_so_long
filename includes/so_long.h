@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 13:20:43 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/22 18:48:04 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/23 14:26:18 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,14 @@ typedef struct s_map
 
 t_map *parsing_args(char *filename);
 void error_msg(char *msg);
+void	free_map(t_map *map);
 
 int	symbols_check(t_map *map);
 int	player_check(t_map *map);
 int	exit_check(t_map *map);
 int	collectables_check(t_map *map);
 int	borders_check(t_map *map);
+
+int	path_check(t_map *map);
 
 #endif
