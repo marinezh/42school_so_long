@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 17:44:47 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/23 15:08:48 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/24 14:21:38 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	size_check(t_map *map)
 	return (1);
 }
 
-int	map_lines(char *filename)
+int	lines_count(char *filename)
 {
 	int		fd;
 	int		count;
@@ -47,6 +47,7 @@ int	map_lines(char *filename)
 		count++;
 		free(line);
 	}
+	printf("lines count %d\n", count);
 	close(fd);
 	return (count);
 }
@@ -71,6 +72,7 @@ int	read_map(t_map *map, char *filename, int max_lines)
 		if (new_line)
 			*new_line = '\0';
 		map->area[i] = ft_strdup(line);
+		//ft_printf("line is %s\n", map->area[i]);
 		free(line);
 		i++;
 	}
@@ -104,7 +106,7 @@ t_map	*parsing_args(char *filename)
 	map = ft_calloc(1, sizeof(t_map));
 	if (!map)
 		return (free_map(map), error_msg("memory error"), NULL);
-	map->size_y = map_lines(filename);
+	map->size_y = lines_count(filename);
 	if (map->size_y < 1)
 		return (free_map(map), error_msg("error file reading"), NULL);
 	map->area = ft_calloc(map->size_y + 1, sizeof(char *));
@@ -116,10 +118,10 @@ t_map	*parsing_args(char *filename)
 	if (size_check(map) < 0 || symbols_check(map) < 0 
 		|| player_check(map) < 0 || exit_check(map) < 0 
 		|| collectables_check(map) < 0 )
-		return (free_map(map), NULL); // need to free map area, LEAK IS HERE
+		return (free_map(map), NULL); 
 	if(path_check(map) < 0)
-		return (free_map(map), error_msg("path check failed"), NULL); // need to free map area, LEAK IS HERE
-	// Print for debugging DELETE!!!
+		return (free_map(map), error_msg("path check failed"), NULL); 
+	// Print for debugging DELETE LATER!!!
 	int j = 0;
 	while (map->area[j])
 		printf("map is %s\n", map->area[j++]);

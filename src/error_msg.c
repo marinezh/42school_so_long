@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 18:20:09 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/22 16:17:29 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/24 18:26:37 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,4 +33,17 @@ void	free_map(t_map *map)
 		free(map->area);
 	}
 	free(map);
+}
+// mlx_img_fail()
+
+void close_game(void *parametr)
+{
+	t_game *game;
+	game = (t_game *)parametr;
+	if(game->mlx)
+		mlx_terminate(game->mlx);
+	if(game->map)
+		free_map(game->map);
+	ft_putendl_fd("Bye Bye", 1);
+	exit(0);
 }

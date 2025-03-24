@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 18:44:35 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/23 14:43:26 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/24 18:05:42 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ int	player_check(t_map *map)
 			if (map->area[row][col] == 'P')
 			{
 				player_count++;
-				map->player_pos.x = row;
-				map->player_pos.y = col;
+				map->player_pos.x = col;
+				map->player_pos.y = row;
 			}
 		}
 		row++;
@@ -76,8 +76,8 @@ int	exit_check(t_map *map)
 			if (map->area[row][col] == 'E')
 			{
 				exit_count++;
-				map->exit_pos.x = row;
-				map->exit_pos.y = col;
+				map->exit_pos.x = col;
+				map->exit_pos.y = row;
 			}
 		}
 		row++;
