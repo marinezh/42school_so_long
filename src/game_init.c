@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 16:35:39 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/25 12:18:44 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:35:24 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,9 @@ int	image_init(t_game *game)
 		return (-1);
 	game->img_player = load(game, PLAYER);
 	if (!game->img_player)
+		return (-1);
+	game->img_enemy = load(game, ENEMY);
+	if (!game->img_enemy)
 		return (-1);
 	return (0);
 }
@@ -85,10 +88,29 @@ void	render_collectables(t_game *game)
 		y++;
 	}
 }
+void	render_enemies(t_game *game)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	while (y < game->map->size_y)
+	{
+		x = 0;
+		while (x < game->map->size_x)
+		{
+			if (game->map->area[y][x] == 'M')
+				mlx_image_to_window(game->mlx, game->img_enemy, x * 64, y
+					* 64);
+			x++;
+		}
+		y++;
+	}
+}
 int	game_init(t_game *game)
 {
 	game->mlx = mlx_init(64 * game->map->size_x, 64 * game->map->size_y,
-			"So_long Test", true);
+			"So_long", true);
 	if (!game->mlx)
 	{
 		printf("MLX42 initialization failed\n");
@@ -100,6 +122,7 @@ int	game_init(t_game *game)
 	game->to_collect = game->map->collectables;
 	render_background(game);
 	render_collectables(game);
+	render_enemies(game);
 	mlx_image_to_window(game->mlx, game->img_exit, game->map->exit_pos.x * 64,
 		game->map->exit_pos.y * 64);
 	mlx_image_to_window(game->mlx, game->img_player, game->map->player_pos.x

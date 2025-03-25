@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 17:44:47 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/24 14:21:38 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:11:51 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	lines_count(char *filename)
 		count++;
 		free(line);
 	}
-	printf("lines count %d\n", count);
+	//printf("lines count %d\n", count);
 	close(fd);
 	return (count);
 }
@@ -95,8 +95,6 @@ int	name_validation(char *filename)
 	return (1);
 }
 
-
-
 t_map	*parsing_args(char *filename)
 {
 	t_map	*map;
@@ -112,16 +110,15 @@ t_map	*parsing_args(char *filename)
 	map->area = ft_calloc(map->size_y + 1, sizeof(char *));
 	if (!map->area)
 		return (free_map(map), error_msg("memory error"), NULL);
-
 	if (read_map(map, filename, map->size_y + 1) < 0)
 		return (free_map(map),error_msg("read map failed"), NULL);
 	if (size_check(map) < 0 || symbols_check(map) < 0 
 		|| player_check(map) < 0 || exit_check(map) < 0 
-		|| collectables_check(map) < 0 )
+		|| collectables_check(map) < 0 || borders_check(map) < 0)
 		return (free_map(map), NULL); 
 	if(path_check(map) < 0)
 		return (free_map(map), error_msg("path check failed"), NULL); 
-	// Print for debugging DELETE LATER!!!
+	//Print for debugging DELETE LATER!!!
 	int j = 0;
 	while (map->area[j])
 		printf("map is %s\n", map->area[j++]);

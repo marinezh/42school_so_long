@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 13:20:43 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/25 12:07:55 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:09:14 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # define COL1 "./textures/collect2.png"
 # define EXIT "./textures/exit.png"
 # define PLAYER "./textures/bee3.png"
+# define ENEMY "./textures/enemy.png"
 
 typedef struct s_point
 {
@@ -39,6 +40,7 @@ typedef struct s_map
 	int			size_x;
 	int			size_y;
 	int			collectables;
+	int			enemy;
 	t_point		player_pos;
 	t_point		exit_pos;
 }				t_map;
@@ -52,6 +54,7 @@ typedef struct s_game
 	mlx_image_t	*img_collect;
 	mlx_image_t	*img_exit;
 	mlx_image_t	*img_player;
+	mlx_image_t	*img_enemy;
 	int 		count_step;
 	int 		to_collect;
 	// Add map, player position, etc.

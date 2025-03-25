@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:22:08 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/23 22:46:27 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:22:06 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int	path_check(t_map *map)
 	copy_map->player_pos.x = map->player_pos.x;
 	copy_map->player_pos.y = map->player_pos.y;
 	copy_map->exit_pos.x = map->exit_pos.x;
+	copy_map->enemy = map->enemy;
 	printf("copy map player position x %d and y %d\n", copy_map->player_pos.x, copy_map->player_pos.y);
 	copy_map->area = ft_calloc(copy_map->size_y + 1, sizeof(char *)); 
 	if (!copy_map->area)
