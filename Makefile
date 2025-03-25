@@ -1,89 +1,75 @@
 # **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/11/10 14:19:08 by mzhivoto          #+#    #+#              #
-#    Updated: 2025/03/24 18:39:01 by mzhivoto         ###   ########.fr        #
-#                                                                              #
+#                                CONFIGURATION                                 #
 # **************************************************************************** #
 
-# Library name
-NAME = so_long
-# Compiler and flags
-CC = cc
-CFLAGS = -Wall -Wextra -Werror -I./includes/ -I./MLX42/include -Wunreachable-code -Ofast
-LDFLAGS = -ldl -lglfw -pthread -lm
+NAME        = so_long
+CC          = cc
 
-SRCS_PATH = ./src
-OBJS_PATH = ./obj
-LIBFT_PATH = ./libft
-MLX_PATH = ./MLX42
-MLX_REPO = https://github.com/codam-coding-college/MLX42.git
+# Paths
+SRCS_PATH   = ./src
+OBJS_PATH   = ./obj
+LIBFT_PATH  = ./libft
+LIBFT       = $(LIBFT_PATH)/libft.a
+MLX42_PATH  = ./MLX42
+MLX42_BUILD = $(MLX42_PATH)/build
+MLX42_LIB   = $(MLX42_BUILD)/libMLX42.a
+MLX42_REPO  = https://github.com/codam-coding-college/MLX42.git
 
-# Source files and object files
-MLXLIB = MLX42/build/libmlx42.a
-LIBFT = $(LIBFT_PATH)/libft.a
-SRC = $(SRCS_PATH)/main.c \
-	$(SRCS_PATH)/parse_args.c \
-	$(SRCS_PATH)/error_msg.c \
-	$(SRCS_PATH)/map_check.c \
-	$(SRCS_PATH)/floodfill.c \
-	$(SRCS_PATH)/mlx_test.c \
-	$(SRCS_PATH)/game_init.c \
-	$(SRCS_PATH)/game_events.c \
+# Homebrew GLFW paths
+GLFW_PATH   = $(shell brew --prefix glfw)
 
-	
+# Flags
+CFLAGS      = -Wall -Wextra -Werror -I./includes -I$(MLX42_PATH)/include -I$(GLFW_PATH)/include
+LDFLAGS     = -L$(MLX42_BUILD) -lMLX42 $(GLFW_PATH)/lib/libglfw3.a \
+              -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
 
-OBJ := $(patsubst $(SRCS_PATH)/%.c, $(OBJS_PATH)/%.o, $(SRC))
+# Sources
+SRC         = $(SRCS_PATH)/main.c \
+              $(SRCS_PATH)/parse_args.c \
+              $(SRCS_PATH)/error_msg.c \
+              $(SRCS_PATH)/map_check.c \
+              $(SRCS_PATH)/floodfill.c \
+              $(SRCS_PATH)/mlx_test.c \
+              $(SRCS_PATH)/game_init.c \
+              $(SRCS_PATH)/game_events.c
 
-# Default rule to create the library
-all: $(MLX_PATH) $(NAME)
+OBJ         = $(patsubst $(SRCS_PATH)/%.c, $(OBJS_PATH)/%.o, $(SRC))
 
-# Rule to create the library from object files
-$(NAME): $(OBJ) $(LIBFT) $(MLX_PATH)
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(MLXLIB) $(LDFLAGS) -o $(NAME)
+# **************************************************************************** #
+#                                    RULES                                     #
+# **************************************************************************** #
+
+all: $(NAME)
+
+$(NAME): $(OBJ) $(LIBFT) $(MLX42_LIB)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(LDFLAGS) -o $(NAME)
 
 $(OBJS_PATH):
-	mkdir -p $(OBJS_PATH)
+	@mkdir -p $(OBJS_PATH)
 
-# Compile each .c file into a .o file
 $(OBJS_PATH)/%.o: $(SRCS_PATH)/%.c | $(OBJS_PATH)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-#Clone and build MLX42
-$(MLX_PATH):
-	git clone $(MLX_REPO) $(MLX_PATH)
-	cmake -B $(MLX_PATH)/build -S $(MLX_PATH) -DGLFW_BUILD_DOCS=OFF -DGLFW_BUILD_TESTS=OFF -DGLFW_BUILD_EXAMPLES=OFF
-	cmake --build $(MLX_PATH)/build
-
-mlx_update:
-	@if [ -d "$(MLX_PATH)" ]; then \
-		echo "Updating MLX42..."; \
-		cd $(MLX_PATH) && git pull && \
-		cmake -B build -S . -DGLFW_BUILD_DOCS=OFF -DGLFW_BUILD_TESTS=OFF -DGLFW_BUILD_EXAMPLES=OFF && \
-		cmake --build build; \
-	else \
-		echo "MLX42 not found. Run 'make' to clone and build."; \
-	fi
-
-# Build libft
 $(LIBFT):
 	@$(MAKE) -C $(LIBFT_PATH)
 
-# Clean rule to remove object files and the library
+$(MLX42_LIB):
+	@if [ ! -d $(MLX42_PATH) ]; then git clone $(MLX42_REPO) $(MLX42_PATH); fi
+	cmake -S $(MLX42_PATH) -B $(MLX42_BUILD)
+	cmake --build $(MLX42_BUILD)
+
 clean:
 	@rm -rf $(OBJS_PATH)
 	@$(MAKE) -C $(LIBFT_PATH) clean
-	@rm -rf $(MLX_PATH)/build
+	@rm -rf $(MLX42_BUILD)
 
 fclean: clean
-	/bin/rm -f $(NAME)
+	@rm -f $(NAME)
 	@$(MAKE) -C $(LIBFT_PATH) fclean
-	@rm -rf $(MLX_PATH)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+run: all
+	./$(NAME)
+
+.PHONY: all clean fclean re run
