@@ -1,63 +1,75 @@
 # **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/11/10 14:19:08 by mzhivoto          #+#    #+#              #
-#    Updated: 2025/03/23 12:22:06 by mzhivoto         ###   ########.fr        #
-#                                                                              #
+#                                CONFIGURATION                                 #
 # **************************************************************************** #
 
-# Library name
-NAME = so_long
-# Compiler and flags
-CC = cc
-CFLAGS = -Wall -Wextra -Werror -I./includes/
+NAME        = so_long
+CC          = cc
 
-SRCS_PATH = ./src
-OBJS_PATH = ./obj
-LIBFT_PATH = ./libft
+# Paths
+SRCS_PATH   = ./src
+OBJS_PATH   = ./obj
+LIBFT_PATH  = ./libft
+LIBFT       = $(LIBFT_PATH)/libft.a
+MLX42_PATH  = ./MLX42
+MLX42_BUILD = $(MLX42_PATH)/build
+MLX42_LIB   = $(MLX42_BUILD)/libMLX42.a
+MLX42_REPO  = https://github.com/codam-coding-college/MLX42.git
 
-# Source files and object files
-LIBFT = $(LIBFT_PATH)/libft.a
-SRC = $(SRCS_PATH)/main.c \
-	$(SRCS_PATH)/parse_args.c \
-	$(SRCS_PATH)/error_msg.c \
-	$(SRCS_PATH)/map_check.c \
-	$(SRCS_PATH)/floodfill.c \
+# Homebrew GLFW paths
+GLFW_PATH   = $(shell brew --prefix glfw)
 
-	
+# Flags
+CFLAGS      = -Wall -Wextra -Werror -I./includes -I$(MLX42_PATH)/include -I$(GLFW_PATH)/include
+LDFLAGS     = -L$(MLX42_BUILD) -lMLX42 $(GLFW_PATH)/lib/libglfw3.a \
+              -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
 
-OBJ := $(patsubst $(SRCS_PATH)/%.c, $(OBJS_PATH)/%.o, $(SRC))
+# Sources
+SRC         = $(SRCS_PATH)/main.c \
+              $(SRCS_PATH)/parse_args.c \
+              $(SRCS_PATH)/error_msg.c \
+              $(SRCS_PATH)/map_check.c \
+              $(SRCS_PATH)/floodfill.c \
+              $(SRCS_PATH)/mlx_test.c \
+              $(SRCS_PATH)/game_init.c \
+              $(SRCS_PATH)/game_events.c
 
-# Default rule to create the library
+OBJ         = $(patsubst $(SRCS_PATH)/%.c, $(OBJS_PATH)/%.o, $(SRC))
+
+# **************************************************************************** #
+#                                    RULES                                     #
+# **************************************************************************** #
+
 all: $(NAME)
 
-# Rule to create the library from object files
-$(NAME): $(OBJ) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME)
+$(NAME): $(OBJ) $(LIBFT) $(MLX42_LIB)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(LDFLAGS) -o $(NAME)
 
 $(OBJS_PATH):
-	mkdir -p $(OBJS_PATH)
+	@mkdir -p $(OBJS_PATH)
 
-# Compile each .c file into a .o file
 $(OBJS_PATH)/%.o: $(SRCS_PATH)/%.c | $(OBJS_PATH)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT):
 	@$(MAKE) -C $(LIBFT_PATH)
 
-# Clean rule to remove object files and the library
+$(MLX42_LIB):
+	@if [ ! -d $(MLX42_PATH) ]; then git clone $(MLX42_REPO) $(MLX42_PATH); fi
+	cmake -S $(MLX42_PATH) -B $(MLX42_BUILD)
+	cmake --build $(MLX42_BUILD)
+
 clean:
 	@rm -rf $(OBJS_PATH)
 	@$(MAKE) -C $(LIBFT_PATH) clean
+	@rm -rf $(MLX42_BUILD)
 
 fclean: clean
-	/bin/rm -f $(NAME)
+	@rm -f $(NAME)
 	@$(MAKE) -C $(LIBFT_PATH) fclean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+run: all
+	./$(NAME)
+
+.PHONY: all clean fclean re run

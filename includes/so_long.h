@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 13:20:43 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/24 18:38:36 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/25 12:07:55 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ typedef struct s_game
 	mlx_image_t	*img_collect;
 	mlx_image_t	*img_exit;
 	mlx_image_t	*img_player;
+	int 		count_step;
+	int 		to_collect;
 	// Add map, player position, etc.
 }				t_game;
 

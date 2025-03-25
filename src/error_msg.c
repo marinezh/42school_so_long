@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 18:20:09 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/24 18:26:37 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:18:15 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	error_msg(char *msg)
 {
 	ft_putendl_fd(msg, 2);
 }
+
 void	free_map(t_map *map)
 {
 	int i;
@@ -34,7 +35,6 @@ void	free_map(t_map *map)
 	}
 	free(map);
 }
-// mlx_img_fail()
 
 void close_game(void *parametr)
 {

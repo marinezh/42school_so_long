@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 16:35:39 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/24 18:19:27 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/25 12:18:44 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,11 +96,13 @@ int	game_init(t_game *game)
 	}
 	if (image_init(game) < 0)
 		return (-1); // error msg image loading fail;
+	game->count_step = 0;
+	game->to_collect = game->map->collectables;
 	render_background(game);
 	render_collectables(game);
-	mlx_image_to_window(game->mlx, game->img_player, game->map->player_pos.x
-		* 64, game->map->player_pos.y * 64);
 	mlx_image_to_window(game->mlx, game->img_exit, game->map->exit_pos.x * 64,
 		game->map->exit_pos.y * 64);
+	mlx_image_to_window(game->mlx, game->img_player, game->map->player_pos.x
+		* 64, game->map->player_pos.y * 64);
 	return (1);
 }
