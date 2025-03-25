@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 18:27:26 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/25 13:17:31 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:40:35 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,11 @@ void	handle_move(t_game *game, int new_x, int new_y)
 	if (game->map->area[new_y][new_x] == 'E' && game->to_collect <= 0)
 	{
 		ft_putstr_fd("you win\n", 1);
+		close_game(game);
+	}
+	if (game->map->area[new_y][new_x] == 'M')
+	{
+		ft_putstr_fd("you have been eaten\n", 1);
 		close_game(game);
 	}
 	collect_collectables(game, new_x, new_y);
