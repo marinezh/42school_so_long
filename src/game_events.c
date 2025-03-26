@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 18:27:26 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/25 15:40:35 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/25 22:37:22 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ void	collect_collectables(t_game *game, int new_x, int new_y)
 		game->to_collect--;
 		while (i < game->map->collectables)
 		{
-			if (game->img_collect->instances[i].x == new_x * TS
-				&& game->img_collect->instances[i].y == new_y * TS)
-				game->img_collect->instances[i].enabled = false;
+			if (game->img_coll->instances[i].x == new_x * TS
+				&& game->img_coll->instances[i].y == new_y * TS)
+				game->img_coll->instances[i].enabled = false;
 			i++;
 		}
 		game->map->area[new_y][new_x] = '0';
@@ -47,12 +47,12 @@ void	handle_move(t_game *game, int new_x, int new_y)
 	printf("number of collectables %d\n", game->to_collect);
 	if (game->map->area[new_y][new_x] == 'E' && game->to_collect <= 0)
 	{
-		ft_putstr_fd("you win\n", 1);
+		ft_putstr_fd("You won!!!Congrats!!!\n", 1);
 		close_game(game);
 	}
 	if (game->map->area[new_y][new_x] == 'M')
 	{
-		ft_putstr_fd("you have been eaten\n", 1);
+		ft_putstr_fd("You have been eaten!!!\n", 1);
 		close_game(game);
 	}
 	collect_collectables(game, new_x, new_y);

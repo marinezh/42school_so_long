@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 16:35:39 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/25 15:35:24 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:13:25 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,58 @@ mlx_image_t	*load(t_game *game, char *path)
 	mlx_texture_t	*texture;
 	mlx_image_t		*img;
 
+	//(void)path;
 	texture = mlx_load_png(path);
 	if (!texture)
-		return (NULL); // nedd to handle exit
+	{
+		error_close_game(game);
+		return NULL;	
+	}
 	img = mlx_texture_to_image(game->mlx, texture);
 	if (!img)
-		return (mlx_delete_texture(texture), NULL);
+	{
+		mlx_delete_texture(texture);
+		error_close_game(game); // handle image conversion failure
+		return (NULL);
+	}
 	mlx_delete_texture(texture);
 	return (img);
 }
 
+// void	init_images(t_game *game)
+// {
+// 	game->mlx = NULL;
+// 	game->img_wall = NULL;
+// 	game->img_coll = NULL;
+// 	game->img_exit = NULL;
+// 	game->img_floor = NULL;
+// 	game->img_player = NULL;
+// 	game->img_enemy = NULL;
+// }
+
+// int	image_init(t_game *game)
+// {
+// 	game->img_wall = load(game, WALL);
+// 	game->img_coll = load(game, COL1);
+// 	game->img_exit = load(game, EXIT);
+// 	game->img_floor = load(game, FLOOR);
+// 	game->img_player = load(game, PLAYER);
+// 	game->img_enemy = load(game, ENEMY);
+// 	if (!game->img_wall || !game->img_coll || !game->img_exit
+// 		|| !game->img_floor || !game->img_player || !game->img_enemy)
+// 	{
+// 		free_images(game);
+// 		return (-1);
+// 	}
+// 	return (0);
+// }
 int	image_init(t_game *game)
 {
 	game->img_wall = load(game, WALL);
 	if (!game->img_wall)
 		return (-1);
-	game->img_collect = load(game, COL1);
-	if (!game->img_collect)
+	game->img_coll = load(game, COL1);
+	if (!game->img_coll)
 		return (-1);
 	game->img_exit = load(game, EXIT);
 	if (!game->img_exit)
@@ -49,83 +84,30 @@ int	image_init(t_game *game)
 		return (-1);
 	return (0);
 }
-void	render_background(t_game *game)
-{
-	int	x;
-	int	y;
 
-	y = 0;
-	while (y < game->map->size_y)
-	{
-		x = 0;
-		while (x < game->map->size_x)
-		{
-			if (game->map->area[y][x] == '1')
-				mlx_image_to_window(game->mlx, game->img_wall, x * 64, y * 64);
-			if (game->map->area[y][x] != '1')
-				mlx_image_to_window(game->mlx, game->img_floor, x * 64, y * 64);
-			x++;
-		}
-		y++;
-	}
-}
-void	render_collectables(t_game *game)
-{
-	int	x;
-	int	y;
-
-	y = 0;
-	while (y < game->map->size_y)
-	{
-		x = 0;
-		while (x < game->map->size_x)
-		{
-			if (game->map->area[y][x] == 'C')
-				mlx_image_to_window(game->mlx, game->img_collect, x * 64, y
-					* 64);
-			x++;
-		}
-		y++;
-	}
-}
-void	render_enemies(t_game *game)
-{
-	int	x;
-	int	y;
-
-	y = 0;
-	while (y < game->map->size_y)
-	{
-		x = 0;
-		while (x < game->map->size_x)
-		{
-			if (game->map->area[y][x] == 'M')
-				mlx_image_to_window(game->mlx, game->img_enemy, x * 64, y
-					* 64);
-			x++;
-		}
-		y++;
-	}
-}
 int	game_init(t_game *game)
 {
-	game->mlx = mlx_init(64 * game->map->size_x, 64 * game->map->size_y,
-			"So_long", true);
+	game->mlx = mlx_init(TS * game->map->size_x, TS * game->map->size_y,
+		"So_long", false);
 	if (!game->mlx)
 	{
-		printf("MLX42 initialization failed\n");
+		error_close_game(game);
 		return (-1);
 	}
+	//init_images(game);
 	if (image_init(game) < 0)
 		return (-1); // error msg image loading fail;
 	game->count_step = 0;
 	game->to_collect = game->map->collectables;
-	render_background(game);
-	render_collectables(game);
-	render_enemies(game);
-	mlx_image_to_window(game->mlx, game->img_exit, game->map->exit_pos.x * 64,
-		game->map->exit_pos.y * 64);
-	mlx_image_to_window(game->mlx, game->img_player, game->map->player_pos.x
-		* 64, game->map->player_pos.y * 64);
-	return (1);
+	if (render_background(game) == -1)
+		error_close_game(game);
+	if (render_collectables(game) == -1)
+		error_close_game(game);
+	if (render_enemies(game) == -1)
+		error_close_game(game);
+	put_image_safe(game, game->img_exit, game->map->exit_pos.x * TS,
+		game->map->exit_pos.y * TS);
+	put_image_safe(game, game->img_player, game->map->player_pos.x * TS,
+		game->map->player_pos.y * TS);
+	return (0);
 }

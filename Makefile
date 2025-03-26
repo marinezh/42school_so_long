@@ -6,7 +6,7 @@
 #    By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/10 14:19:08 by mzhivoto          #+#    #+#              #
-#    Updated: 2025/03/25 11:44:26 by mzhivoto         ###   ########.fr        #
+#    Updated: 2025/03/26 13:18:28 by mzhivoto         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,14 +28,12 @@ MLXLIB = MLX42/build/libmlx42.a
 LIBFT = $(LIBFT_PATH)/libft.a
 SRC = $(SRCS_PATH)/main.c \
 	$(SRCS_PATH)/parse_args.c \
-	$(SRCS_PATH)/error_msg.c \
+	$(SRCS_PATH)/utils.c \
 	$(SRCS_PATH)/map_check.c \
 	$(SRCS_PATH)/floodfill.c \
-	$(SRCS_PATH)/mlx_test.c \
 	$(SRCS_PATH)/game_init.c \
 	$(SRCS_PATH)/game_events.c \
-
-	
+	$(SRCS_PATH)/game_render.c \
 
 OBJ := $(patsubst $(SRCS_PATH)/%.c, $(OBJS_PATH)/%.o, $(SRC))
 

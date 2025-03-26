@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 17:44:47 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/25 15:11:51 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:35:21 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,13 @@ int	lines_count(char *filename)
 		return (error_msg("file openning error 1"), -1);
 	while (1)
 	{
-		line = get_next_line(fd);
+		line = read_file(fd);
+		//line = get_next_line(fd);
 		if (!line)
 			break ;
 		count++;
 		free(line);
 	}
-	//printf("lines count %d\n", count);
 	close(fd);
 	return (count);
 }
@@ -65,19 +65,27 @@ int	read_map(t_map *map, char *filename, int max_lines)
 		return (error_msg("file openning error"), -1);
 	while (i < max_lines)
 	{
-		line = get_next_line(fd);
+		line = read_file(fd);
+		//line = get_next_line(fd);
 		if (!line)
 			break ;
 		new_line = ft_strchr(line, '\n');
 		if (new_line)
 			*new_line = '\0';
 		map->area[i] = ft_strdup(line);
-		//ft_printf("line is %s\n", map->area[i]);
-		free(line);
-		i++;
+		{
+			if (!map->area[i])
+			{
+				free(line);
+				close(fd);
+				return (error_msg("memory allocation error"), -1);
+			}
+			free(line);
+			i++;
+		}
 	}
 	map->area[i] = NULL;
-	
+	close(fd);
 	return (1);
 }
 
@@ -89,7 +97,7 @@ int	name_validation(char *filename)
 	len = ft_strlen(filename);
 	if (len < 5)
 		return (-1);
-	extension = ft_strchr(filename, '.');
+	extension = ft_strrchr(filename, '.');
 	if (!extension || ft_strncmp(extension, ".ber", len) != 0)
 		return (-1);
 	return (1);
@@ -98,28 +106,29 @@ int	name_validation(char *filename)
 t_map	*parsing_args(char *filename)
 {
 	t_map	*map;
+	int		j;
 
 	if (name_validation(filename) < 0)
 		return (error_msg("wrong file name"), NULL);
 	map = ft_calloc(1, sizeof(t_map));
 	if (!map)
-		return (free_map(map), error_msg("memory error"), NULL);
+		return (error_msg("memory error"), NULL);
 	map->size_y = lines_count(filename);
 	if (map->size_y < 1)
-		return (free_map(map), error_msg("error file reading"), NULL);
+		return (free(map), error_msg("error file reading"), NULL);
 	map->area = ft_calloc(map->size_y + 1, sizeof(char *));
 	if (!map->area)
 		return (free_map(map), error_msg("memory error"), NULL);
 	if (read_map(map, filename, map->size_y + 1) < 0)
-		return (free_map(map),error_msg("read map failed"), NULL);
-	if (size_check(map) < 0 || symbols_check(map) < 0 
-		|| player_check(map) < 0 || exit_check(map) < 0 
-		|| collectables_check(map) < 0 || borders_check(map) < 0)
-		return (free_map(map), NULL); 
-	if(path_check(map) < 0)
-		return (free_map(map), error_msg("path check failed"), NULL); 
-	//Print for debugging DELETE LATER!!!
-	int j = 0;
+		return (free_map(map), error_msg("read map failed"), NULL);
+	if (size_check(map) < 0 || symbols_check(map) < 0 || player_check(map) < 0
+		|| exit_check(map) < 0 || collectables_check(map) < 0
+		|| borders_check(map) < 0)
+		return (free_map(map), NULL);
+	if (path_check(map) < 0)
+		return (free_map(map), error_msg("path check failed"), NULL);
+	// Print for debugging DELETE LATER!!!
+	j = 0;
 	while (map->area[j])
 		printf("map is %s\n", map->area[j++]);
 	return (map);

@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 18:21:28 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/02/28 16:07:11 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/26 11:21:59 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ int	ft_putptr(void *ptr);
 int	ft_printf(const char *format, ...);
 
 char	*get_next_line(int fd);
+//char *get_next_line(int fd, int clean);
 //void	*ft_memcpy(void *dest, const void *src, size_t n);
 char	*str_join(char *s1, const char *s2);
 char	*find_newline(const char *str);
