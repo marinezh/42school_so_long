@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 18:44:35 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/25 15:17:53 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:32:46 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ int	player_check(t_map *map)
 		return (error_msg("Error: There must be exactly one player (P)"), -1);
 	return (1);
 }
+
 int	exit_check(t_map *map)
 {
 	int	row;
@@ -87,6 +88,7 @@ int	exit_check(t_map *map)
 		return (error_msg("Error: There must be exactly one exit (E)"), -1);
 	return (1);
 }
+
 int	collectables_check(t_map *map)
 {
 	int	row;
@@ -109,7 +111,6 @@ int	collectables_check(t_map *map)
 	if (collectables_count < 1)
 		return (error_msg("Error: There must be at least 1 col-s (C)"), -1);
 	map->collectables = collectables_count;
-	// printf("collectable-2 %d\n", map->collectables);
 	return (1);
 }
 

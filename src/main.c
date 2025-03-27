@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 16:46:11 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/25 21:29:30 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:32:19 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int	main(int ac, char **av)
 	map = parsing_args(av[1]);
 	if (!map)
 		return (1);
-	//printf("EXIT x -  %d, y - %d\n", map->exit_pos.x, map->exit_pos.y);
 	game.map = map;
 	if (game_init(&game) == -1)
 		error_close_game(&game);
@@ -31,4 +30,3 @@ int	main(int ac, char **av)
 	mlx_loop(game.mlx);
 	return (0);
 }
-

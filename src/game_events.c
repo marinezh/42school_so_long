@@ -6,13 +6,13 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 18:27:26 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/25 22:37:22 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:30:40 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	collect_collectables(t_game *game, int new_x, int new_y)
+static void	collect_collectables(t_game *game, int new_x, int new_y)
 {
 	int	i;
 
@@ -32,19 +32,18 @@ void	collect_collectables(t_game *game, int new_x, int new_y)
 	}
 }
 
-void	handle_move(t_game *game, int new_x, int new_y)
+static void	handle_move(t_game *game, int new_x, int new_y)
 {
 	if (game->map->area[new_y][new_x] == '1')
 		return ;
 	game->count_step++;
-	ft_putstr_fd("you did: ", 1);
+	ft_putstr_fd("steps you did: ", 1);
 	ft_putnbr_fd(game->count_step, 1);
 	ft_putstr_fd("\n", 1);
 	game->map->player_pos.x = new_x;
 	game->map->player_pos.y = new_y;
-	game->img_player->instances->x = new_x * TS; // drawing new pos of hero
+	game->img_player->instances->x = new_x * TS;
 	game->img_player->instances->y = new_y * TS;
-	printf("number of collectables %d\n", game->to_collect);
 	if (game->map->area[new_y][new_x] == 'E' && game->to_collect <= 0)
 	{
 		ft_putstr_fd("You won!!!Congrats!!!\n", 1);

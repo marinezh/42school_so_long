@@ -6,7 +6,7 @@
 /*   By: mzhivoto <mzhivoto@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 13:20:43 by mzhivoto          #+#    #+#             */
-/*   Updated: 2025/03/26 12:52:43 by mzhivoto         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:35:51 by mzhivoto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 # include "../MLX42/include/MLX42/MLX42.h"
 # include "libft.h"
 # include <fcntl.h>
-# include <stdio.h>
+//# include <stdio.h>
 # include <stdlib.h>
-# include <unistd.h>
+//# include <unistd.h>
 
 # define TS 64
 # define WALL "./textures/wall5.png"
@@ -60,27 +60,22 @@ typedef struct s_game
 }				t_game;
 
 t_map			*parsing_args(char *filename);
-
 void			error_msg(char *msg);
 void			free_map(t_map *map);
 void			close_game(void *parametr);
 void			error_close_game(void *parametr);
-//void			free_images(t_game *game);
-
-int				game_init(t_game *game);
+char			*read_file(int fd);
+int				path_check(t_map *map);
 int				symbols_check(t_map *map);
 int				player_check(t_map *map);
 int				exit_check(t_map *map);
 int				collectables_check(t_map *map);
 int				borders_check(t_map *map);
-
-int				path_check(t_map *map);
+int				game_init(t_game *game);
 void			click(mlx_key_data_t keydata, void *parametr);
-
 int				put_image_safe(t_game *game, mlx_image_t *img, int x, int y);
 int				render_background(t_game *game);
 int				render_collectables(t_game *game);
 int				render_enemies(t_game *game);
-char			*read_file(int fd);
 
 #endif
